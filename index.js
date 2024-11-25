@@ -23,11 +23,42 @@ io.on("connection", (socket) => {
     console.log(
       `User with ID: ${socket.id} (username: ${username}) joined the room: ${room}`
     );
+
+    // This sends a message to the group chat if a user joins that specific chat.
     socket.to(room).emit("receive_message", {
       author: "System",
       message: `${username} has joined the room`,
       time: new Date().toLocaleTimeString(),
     });
+
+    // This just alert's the user that they joined the group chat
+    socket.emit("receive_message", {
+      author: "System",
+      message: "You joined the group chat",
+      time: new Date().toLocaleTimeString(),
+    });
+  });
+
+  socket.on("exit_room", (data) => {
+    const { username, room } = data;
+    socket.leave(room);
+    console.log(
+      `User with ID: ${socket.id} (username: ${username}) left the room: ${room}`
+    );
+
+    // This just the opposite of the join alert, it just alert's the user when a member of a group chat left.
+    socket.to(room).emit("receive_message", {
+      author: "System",
+      message: `${username} has left the room`,
+      time: new Date().toLocaleTimeString(),
+    });
+
+    // This just alter's the user that they left the group chat. (Don't need it for now)
+    // socket.emit("receive_message", {
+    //   author: "System",
+    //   message: "You left the group chat",
+    //   time: new Date().toLocaleTimeString(),
+    // });
   });
 
   socket.on("send_message", (data) => {
