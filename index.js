@@ -7,19 +7,19 @@ const { Server } = require("socket.io");
 app.use(cors());
 
 const server = http.createServer(app);
-// const io = new Server(server, {
-//   cors: {
-//     origin: "https://groupchat-socket-io.vercel.app",
-//     methods: ["GET", "POST"],
-//   },
-// });
-
 const io = new Server(server, {
   cors: {
-    origin: "http://localhost:5173",
+    origin: "https://groupchat-socket-io.vercel.app",
     methods: ["GET", "POST"],
   },
 });
+
+// const io = new Server(server, {
+//   cors: {
+//     origin: "http://localhost:5173",
+//     methods: ["GET", "POST"],
+//   },
+// });
 
 io.on("connection", (socket) => {
   // console.log(`User connected : ${socket.id}`);
