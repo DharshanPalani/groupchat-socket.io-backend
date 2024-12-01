@@ -7,22 +7,29 @@ const { Server } = require("socket.io");
 app.use(cors());
 
 const server = http.createServer(app);
+// const io = new Server(server, {
+//   cors: {
+//     origin: "https://groupchat-socket-io.vercel.app",
+//     methods: ["GET", "POST"],
+//   },
+// });
+
 const io = new Server(server, {
   cors: {
-    origin: "https://groupchat-socket-io.vercel.app",
+    origin: "http://localhost:5173",
     methods: ["GET", "POST"],
   },
 });
 
 io.on("connection", (socket) => {
-  console.log(`User connected : ${socket.id}`);
+  // console.log(`User connected : ${socket.id}`);
 
   socket.on("join_room", (data) => {
     const { username, room } = data;
     socket.join(room);
-    console.log(
-      `User with ID: ${socket.id} (username: ${username}) joined the room: ${room}`
-    );
+    // console.log(
+    //   `User with ID: ${socket.id} (username: ${username}) joined the room: ${room}`
+    // );
 
     // This sends a message to the group chat if a user joins that specific chat.
     socket.to(room).emit("receive_message", {
@@ -42,9 +49,9 @@ io.on("connection", (socket) => {
   socket.on("exit_room", (data) => {
     const { username, room } = data;
     socket.leave(room);
-    console.log(
-      `User with ID: ${socket.id} (username: ${username}) left the room: ${room}`
-    );
+    // console.log(
+    //   `User with ID: ${socket.id} (username: ${username}) left the room: ${room}`
+    // );
 
     // This just the opposite of the join alert, it just alert's the user when a member of a group chat left.
     socket.to(room).emit("receive_message", {
@@ -63,11 +70,11 @@ io.on("connection", (socket) => {
 
   socket.on("send_message", (data) => {
     socket.to(data.room).emit("receive_message", data);
-    console.log(data);
+    // console.log(data);
   });
 
   socket.on("disconnect", () => {
-    console.log("User disconnected");
+    // console.log("User disconnected");
   });
 });
 
